@@ -24,8 +24,8 @@ For any CI/CD platform, you'll need:
 
 **Example:**
 ```yaml
-- name: Upload and build packages
-  uses: distropack/distropack-cli/.github/actions/distropack-action@v1
+- name: DistroPack
+  uses: distropack/distropack-action@v1.0
   with:
     api-token: ${{ secrets.DISTROPACK_API_TOKEN }}
     package-id: 123
@@ -78,8 +78,8 @@ Set these in your CI/CD platform's secrets/environment configuration:
 ```yaml
 # GitHub Actions example using the official action
 steps:
-  - name: Upload and build packages
-    uses: distropack/distropack-cli/.github/actions/distropack-action@v1
+  - name: DistroPack
+    uses: distropack/distropack-action@v1.0
     with:
       api-token: ${{ secrets.DISTROPACK_API_TOKEN }}
       package-id: 123

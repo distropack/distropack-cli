@@ -15,8 +15,8 @@ Official command-line tool for DistroPack - automate Linux package builds from C
 The easiest way to use DistroPack in GitHub Actions is with our official action:
 
 ```yaml
-- name: Upload and build packages
-  uses: distropack/distropack-cli/.github/actions/distropack-action@v1
+- name: DistroPack
+  uses: distropack/distropack-action@v1.0
   with:
     api-token: ${{ secrets.DISTROPACK_API_TOKEN }}
     package-id: 123

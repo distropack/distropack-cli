@@ -49,8 +49,8 @@ jobs:
           mkdir -p dist
           tar czf dist/myapp-${{ steps.version.outputs.version }}.tar.gz src/
       
-      - name: Upload and build packages
-        uses: distropack/distropack-cli/.github/actions/distropack-action@v1
+      - name: DistroPack
+        uses: distropack/distropack-action@v1.0
         with:
           api-token: ${{ secrets.DISTROPACK_API_TOKEN }}
           package-id: ${{ secrets.DISTROPACK_PACKAGE_ID }}
@@ -163,8 +163,8 @@ strategy:
   matrix:
     target: [deb, rpm, pacman]
 steps:
-  - name: Build ${{ matrix.target }} package
-    uses: distropack/distropack-cli/.github/actions/distropack-action@v1
+  - name: DistroPack
+    uses: distropack/distropack-action@v1.0
     with:
       api-token: ${{ secrets.DISTROPACK_API_TOKEN }}
       package-id: ${{ secrets.DISTROPACK_PACKAGE_ID }}
@@ -210,8 +210,8 @@ strategy:
   matrix:
     package: [123, 456, 789]
 steps:
-  - name: Build package ${{ matrix.package }}
-    uses: distropack/distropack-cli/.github/actions/distropack-action@v1
+  - name: DistroPack
+    uses: distropack/distropack-action@v1.0
     with:
       api-token: ${{ secrets.DISTROPACK_API_TOKEN }}
       package-id: ${{ matrix.package }}
