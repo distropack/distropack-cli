@@ -1,0 +1,67 @@
+pipeline {
+    agent any
+    
+    environment {
+        DISTROPACK_PACKAGE_ID = credentials('distropack-package-id')
+        DISTROPACK_API_TOKEN = credentials('distropack-api-token')
+        DISTROPACK_API_URL = 'https://distropack.dev'
+    }
+    
+    stages {
+        stage('Setup') {
+            steps {
+                script {
+                    // Determine version from tag or branch
+                    if (env.TAG_NAME) {
+                        env.VERSION = env.TAG_NAME.replaceFirst(/^v/, '')
+                    } else {
+                        env.VERSION = "${env.BRANCH_NAME}-${env.BUILD_NUMBER}"
+                    }
+                }
+            }
+        }
+        
+        stage('Install CLI') {
+            steps {
+                sh '''
+                    # Option 1: Download pre-built binary
+                    # curl -L https://github.com/distropack/distropack-cli/releases/latest/download/distropack-cli-x86_64-unknown-linux-gnu -o distropack-cli
+                    # chmod +x distropack-cli
+                    # export PATH=$PWD:$PATH
+                    
+                    # Option 2: Build from source
+                    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+                    source $HOME/.cargo/env
+                    cargo install --path distropack-cli --locked
+                '''
+            }
+        }
+        
+        stage('Upload Files') {
+            steps {
+                sh '''
+                    distropack-cli upload --package-id $DISTROPACK_PACKAGE_ID --ref-id source-tarball --file dist/myapp-${VERSION}.tar.gz
+                    distropack-cli upload --package-id $DISTROPACK_PACKAGE_ID --ref-id changelog --file CHANGELOG.md
+                '''
+            }
+        }
+        
+        stage('Trigger Builds') {
+            steps {
+                sh '''
+                    distropack-cli build --package-id $DISTROPACK_PACKAGE_ID --version $VERSION
+                '''
+            }
+        }
+    }
+    
+    post {
+        success {
+            echo "Package build triggered successfully for version ${VERSION}"
+        }
+        failure {
+            echo "Failed to trigger package build"
+        }
+    }
+}
+

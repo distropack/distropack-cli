@@ -1,0 +1,65 @@
+name: DistroPack Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Package version'
+        required: true
+
+env:
+  DISTROPACK_PACKAGE_ID: ${{ secrets.DISTROPACK_PACKAGE_ID }}
+  DISTROPACK_API_TOKEN: ${{ secrets.DISTROPACK_API_TOKEN }}
+  DISTROPACK_API_URL: ${{ secrets.DISTROPACK_API_URL }}
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install DistroPack CLI
+        run: |
+          # Option 1: Install from releases (when available)
+          # curl -L https://github.com/distropack/distropack-cli/releases/latest/download/distropack-cli-x86_64-unknown-linux-gnu -o distropack-cli
+          # chmod +x distropack-cli
+          # sudo mv distropack-cli /usr/local/bin/
+          
+          # Option 2: Build from source
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+          source $HOME/.cargo/env
+          cargo install --path distropack-cli --locked
+
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            # Extract version from tag (e.g., v1.2.3 -> 1.2.3)
+            VERSION=${GITHUB_REF#refs/tags/v}
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload files
+        run: |
+          # Upload each file by its reference ID
+          distropack-cli upload --package-id $DISTROPACK_PACKAGE_ID --ref-id source-tarball --file dist/myapp-${{ steps.version.outputs.version }}.tar.gz
+          distropack-cli upload --package-id $DISTROPACK_PACKAGE_ID --ref-id changelog --file CHANGELOG.md
+
+      - name: Trigger builds
+        run: |
+          # Build for all enabled targets
+          distropack-cli build --package-id $DISTROPACK_PACKAGE_ID --version ${{ steps.version.outputs.version }}
+          
+          # Or build for specific targets:
+          # distropack-cli build --package-id $DISTROPACK_PACKAGE_ID --version ${{ steps.version.outputs.version }} --target deb
+          # distropack-cli build --package-id $DISTROPACK_PACKAGE_ID --version ${{ steps.version.outputs.version }} --target rpm
+          # distropack-cli build --package-id $DISTROPACK_PACKAGE_ID --version ${{ steps.version.outputs.version }} --target pacman
+
+

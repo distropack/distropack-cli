@@ -1,0 +1,49 @@
+name: DistroPack Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Package version'
+        required: true
+
+env:
+  DISTROPACK_API_TOKEN: ${{ secrets.DISTROPACK_API_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          else
+            VERSION=${GITHUB_REF#refs/tags/v}
+            echo "version=$VERSION" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Build source tarball
+        run: |
+          mkdir -p dist
+          tar czf dist/myapp-${{ steps.version.outputs.version }}.tar.gz src/ || echo "No src/ directory, skipping tarball"
+      
+      - name: Upload files and trigger build
+        uses: distropack/distropack-cli/.github/actions/distropack-action@v1
+        with:
+          api-token: ${{ secrets.DISTROPACK_API_TOKEN }}
+          package-id: ${{ secrets.DISTROPACK_PACKAGE_ID }}
+          version: ${{ steps.version.outputs.version }}
+          files: |
+            {
+              "source-tarball": "dist/myapp-${{ steps.version.outputs.version }}.tar.gz",
+              "changelog": "CHANGELOG.md"
+            }
+

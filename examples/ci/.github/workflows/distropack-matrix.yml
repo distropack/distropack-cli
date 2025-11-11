@@ -1,0 +1,43 @@
+name: DistroPack Matrix Build
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  DISTROPACK_API_TOKEN: ${{ secrets.DISTROPACK_API_TOKEN }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: [deb, rpm, pacman]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Determine version
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Build source tarball
+        run: |
+          mkdir -p dist
+          tar czf dist/myapp-${{ steps.version.outputs.version }}.tar.gz src/ || echo "No src/ directory, skipping tarball"
+      
+      - name: Build ${{ matrix.target }} package
+        uses: distropack/distropack-cli/.github/actions/distropack-action@v1
+        with:
+          api-token: ${{ secrets.DISTROPACK_API_TOKEN }}
+          package-id: ${{ secrets.DISTROPACK_PACKAGE_ID }}
+          version: ${{ steps.version.outputs.version }}
+          target: ${{ matrix.target }}
+          files: |
+            {
+              "source-tarball": "dist/myapp-${{ steps.version.outputs.version }}.tar.gz"
+            }
+

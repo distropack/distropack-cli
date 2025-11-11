@@ -1,0 +1,53 @@
+version: 2.1
+
+jobs:
+  build-and-publish:
+    docker:
+      - image: cimg/rust:1.75
+    steps:
+      - checkout
+      
+      - run:
+          name: Install DistroPack CLI
+          command: |
+            # Option 1: Install from releases
+            # curl -L https://github.com/distropack/distropack-cli/releases/latest/download/distropack-cli-x86_64-unknown-linux-gnu -o distropack-cli
+            # chmod +x distropack-cli
+            # sudo mv distropack-cli /usr/local/bin/
+            
+            # Option 2: Build from source
+            cargo install --path distropack-cli --locked
+
+      - run:
+          name: Determine version
+          command: |
+            if [ -n "$CIRCLE_TAG" ]; then
+              VERSION=${CIRCLE_TAG#v}
+            else
+              VERSION=${CIRCLE_BRANCH}-${CIRCLE_SHA1:0:7}
+            fi
+            echo "export VERSION=$VERSION" >> $BASH_ENV
+
+      - run:
+          name: Upload files
+          command: |
+            distropack-cli upload --package-id $DISTROPACK_PACKAGE_ID --ref-id source-tarball --file dist/myapp-$VERSION.tar.gz
+            distropack-cli upload --package-id $DISTROPACK_PACKAGE_ID --ref-id changelog --file CHANGELOG.md
+
+      - run:
+          name: Trigger builds
+          command: |
+            distropack-cli build --package-id $DISTROPACK_PACKAGE_ID --version $VERSION
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build-and-publish:
+          filters:
+            branches:
+              only: main
+            tags:
+              only: /^v.*/
+
+
