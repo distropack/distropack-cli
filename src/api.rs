@@ -1,7 +1,5 @@
 use anyhow::{Context, Result};
 use reqwest::multipart;
-use serde::{Deserialize, Serialize};
-use std::fs;
 use std::path::Path;
 
 use crate::config::Config;
@@ -10,12 +8,6 @@ pub struct ApiClient {
     client: reqwest::Client,
     base_url: String,
     token: String,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct BuildResponse {
-    pub success: bool,
-    pub message: Option<String>,
 }
 
 impl ApiClient {
