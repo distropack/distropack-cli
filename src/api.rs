@@ -107,12 +107,14 @@ impl ApiClient {
                 .json()
                 .await
                 .context("Failed to parse build response")?;
-            
+
             println!(
                 "Build triggered successfully for package {} version {} ({} job(s))",
-                package_id, version, build_response.job_ids.len()
+                package_id,
+                version,
+                build_response.job_ids.len()
             );
-            
+
             Ok(build_response.job_ids)
         } else {
             let status = response.status();
@@ -149,6 +151,7 @@ impl ApiClient {
 
 #[derive(Deserialize)]
 struct BuildResponse {
+    #[serde(rename = "jobIds")]
     job_ids: Vec<String>,
 }
 
