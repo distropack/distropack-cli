@@ -158,17 +158,20 @@ struct BuildResponse {
 #[derive(Deserialize)]
 pub struct BuildStatusResponse {
     pub jobs: Vec<JobStatus>,
+    #[serde(rename = "allFinished")]
     pub all_finished: bool,
+    #[serde(rename = "anyFailed")]
     pub any_failed: bool,
 }
 
 #[derive(Deserialize)]
 pub struct JobStatus {
+    #[serde(rename = "jobId")]
     pub job_id: String,
     pub status: String,
     pub name: String,
-    #[serde(default)]
+    #[serde(rename = "failMessage")]
     pub fail_message: Option<String>,
-    #[serde(default)]
+    #[serde(rename = "technicalError")]
     pub technical_error: Option<String>,
 }
