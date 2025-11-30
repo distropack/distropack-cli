@@ -4,7 +4,7 @@ use tokio::time::sleep;
 use crate::api::ApiClient;
 use crate::config::Config;
 
-pub async fn build_package(package_id: i32, version: &str, target: Option<&str>) -> Result<()> {
+pub async fn build_package(package_id: &str, version: &str, target: Option<&str>) -> Result<()> {
     let config = Config::load()?;
     let client = ApiClient::new(&config)?;
     

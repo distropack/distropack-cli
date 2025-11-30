@@ -23,7 +23,7 @@ enum Commands {
     Upload {
         /// Package ID
         #[arg(long)]
-        package_id: i32,
+        package_id: String,
         /// File reference ID (access name)
         #[arg(long)]
         ref_id: String,
@@ -35,7 +35,7 @@ enum Commands {
     Build {
         /// Package ID
         #[arg(long)]
-        package_id: i32,
+        package_id: String,
         /// Version string
         #[arg(long)]
         version: String,
@@ -75,12 +75,12 @@ async fn main() -> Result<()> {
             package_id,
             ref_id,
             file,
-        } => upload::upload_file(package_id, &ref_id, &file).await,
+        } => upload::upload_file(&package_id, &ref_id, &file).await,
         Commands::Build {
             package_id,
             version,
             target,
-        } => build::build_package(package_id, &version, target.as_deref()).await,
+        } => build::build_package(&package_id, &version, target.as_deref()).await,
         Commands::Config { command } => match command {
             ConfigCommands::SetToken { token } => config_cmd::set_token(&token).await,
             ConfigCommands::SetBaseUrl { url } => config_cmd::set_base_url(&url).await,

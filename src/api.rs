@@ -27,7 +27,7 @@ impl ApiClient {
         })
     }
 
-    pub async fn upload_file(&self, package_id: i32, ref_id: &str, file_path: &str) -> Result<()> {
+    pub async fn upload_file(&self, package_id: &str, ref_id: &str, file_path: &str) -> Result<()> {
         let path = Path::new(file_path);
         if !path.exists() {
             anyhow::bail!("File not found: {}", file_path);
@@ -75,7 +75,7 @@ impl ApiClient {
 
     pub async fn build_package(
         &self,
-        package_id: i32,
+        package_id: &str,
         version: &str,
         target: Option<&str>,
     ) -> Result<Vec<String>> {

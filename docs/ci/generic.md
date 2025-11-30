@@ -16,7 +16,7 @@ Use the provided `generic-ci.sh` script:
 ```bash
 #!/bin/bash
 # Set required variables
-export DISTROPACK_PACKAGE_ID=123
+export DISTROPACK_PACKAGE_ID=550e8400-e29b-41d4-a716-446655440000
 export DISTROPACK_API_TOKEN="your-token-here"
 export DISTROPACK_API_URL="https://distropack.dev"  # Optional
 export VERSION="1.0.0"  # Or extract from CI variables
@@ -32,7 +32,7 @@ export VERSION="1.0.0"  # Or extract from CI variables
 ```yaml
 language: rust
 env:
-  - DISTROPACK_PACKAGE_ID=123
+  - DISTROPACK_PACKAGE_ID=550e8400-e29b-41d4-a716-446655440000
 script:
   - cargo install --path distropack-cli --locked
   - |
@@ -48,7 +48,7 @@ script:
 
 ```yaml
 variables:
-  DISTROPACK_PACKAGE_ID: '123'
+  DISTROPACK_PACKAGE_ID: '550e8400-e29b-41d4-a716-446655440000'
 
 steps:
   - task: UsePythonVersion@0
@@ -90,7 +90,7 @@ steps:
     environment:
       DISTROPACK_API_TOKEN:
         from_secret: distropack_api_token
-      DISTROPACK_PACKAGE_ID: 123
+      DISTROPACK_PACKAGE_ID: 550e8400-e29b-41d4-a716-446655440000
     commands:
       - distropack-cli build --package-id $DISTROPACK_PACKAGE_ID --version ${DRONE_TAG#v}
     when:

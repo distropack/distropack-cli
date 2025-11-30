@@ -19,7 +19,7 @@ The easiest way to use DistroPack in GitHub Actions is with our official action:
   uses: distropack/distropack-action@v1.0
   with:
     api-token: ${{ secrets.DISTROPACK_API_TOKEN }}
-    package-id: 123
+    package-id: 550e8400-e29b-41d4-a716-446655440000
     version: 1.0.0
     files: |
       {
@@ -59,12 +59,12 @@ Pre-built binaries will be available for:
 
 3. **Upload files**:
    ```bash
-   distropack-cli upload --package-id 123 --ref-id source-tarball --file dist/myapp-1.0.0.tar.gz
+   distropack-cli upload --package-id 550e8400-e29b-41d4-a716-446655440000 --ref-id source-tarball --file dist/myapp-1.0.0.tar.gz
    ```
 
 4. **Trigger builds**:
    ```bash
-   distropack-cli build --package-id 123 --version 1.0.0
+   distropack-cli build --package-id 550e8400-e29b-41d4-a716-446655440000 --version 1.0.0
    ```
 
 ## Commands
@@ -79,7 +79,7 @@ distropack-cli upload --package-id <id> --ref-id <accessName> --file <path>
 
 **Example:**
 ```bash
-distropack-cli upload --package-id 123 --ref-id source-tarball --file dist/myapp-1.0.0.tar.gz
+distropack-cli upload --package-id 550e8400-e29b-41d4-a716-446655440000 --ref-id source-tarball --file dist/myapp-1.0.0.tar.gz
 ```
 
 ### Build
@@ -93,12 +93,12 @@ distropack-cli build --package-id <id> --version <version> [--target <deb|rpm|pa
 **Examples:**
 ```bash
 # Build for all enabled targets
-distropack-cli build --package-id 123 --version 1.0.0
+distropack-cli build --package-id 550e8400-e29b-41d4-a716-446655440000 --version 1.0.0
 
 # Build for specific target
-distropack-cli build --package-id 123 --version 1.0.0 --target deb
-distropack-cli build --package-id 123 --version 1.0.0 --target rpm
-distropack-cli build --package-id 123 --version 1.0.0 --target pacman
+distropack-cli build --package-id 550e8400-e29b-41d4-a716-446655440000 --version 1.0.0 --target deb
+distropack-cli build --package-id 550e8400-e29b-41d4-a716-446655440000 --version 1.0.0 --target rpm
+distropack-cli build --package-id 550e8400-e29b-41d4-a716-446655440000 --version 1.0.0 --target pacman
 ```
 
 ### Config
@@ -127,7 +127,7 @@ The CLI supports environment variables for CI/CD integration:
 ```bash
 export DISTROPACK_API_TOKEN="your-token-here"
 export DISTROPACK_API_URL="https://distropack.dev"
-distropack-cli build --package-id 123 --version 1.0.0
+distropack-cli build --package-id 550e8400-e29b-41d4-a716-446655440000 --version 1.0.0
 ```
 
 ## Configuration File

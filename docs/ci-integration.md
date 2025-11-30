@@ -28,7 +28,7 @@ For any CI/CD platform, you'll need:
   uses: distropack/distropack-action@v1.0
   with:
     api-token: ${{ secrets.DISTROPACK_API_TOKEN }}
-    package-id: 123
+    package-id: 550e8400-e29b-41d4-a716-446655440000
     version: 1.0.0
     files: |
       {
@@ -82,7 +82,7 @@ steps:
     uses: distropack/distropack-action@v1.0
     with:
       api-token: ${{ secrets.DISTROPACK_API_TOKEN }}
-      package-id: 123
+      package-id: 550e8400-e29b-41d4-a716-446655440000
       version: 1.0.0
       files: |
         {

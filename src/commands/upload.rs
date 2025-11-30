@@ -2,7 +2,7 @@ use anyhow::Result;
 use crate::api::ApiClient;
 use crate::config::Config;
 
-pub async fn upload_file(package_id: i32, ref_id: &str, file_path: &str) -> Result<()> {
+pub async fn upload_file(package_id: &str, ref_id: &str, file_path: &str) -> Result<()> {
     let config = Config::load()?;
     let client = ApiClient::new(&config)?;
     

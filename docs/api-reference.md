@@ -20,7 +20,7 @@ distropack-cli upload --package-id <id> --ref-id <accessName> --file <path>
 
 **Example:**
 ```bash
-distropack-cli upload --package-id 123 --ref-id source-tarball --file dist/myapp-1.0.0.tar.gz
+distropack-cli upload --package-id 550e8400-e29b-41d4-a716-446655440000 --ref-id source-tarball --file dist/myapp-1.0.0.tar.gz
 ```
 
 **Exit Codes:**
@@ -44,10 +44,10 @@ distropack-cli build --package-id <id> --version <version> [--target <target>]
 **Examples:**
 ```bash
 # Build for all enabled targets
-distropack-cli build --package-id 123 --version 1.0.0
+distropack-cli build --package-id 550e8400-e29b-41d4-a716-446655440000 --version 1.0.0
 
 # Build for specific target
-distropack-cli build --package-id 123 --version 1.0.0 --target deb
+distropack-cli build --package-id 550e8400-e29b-41d4-a716-446655440000 --version 1.0.0 --target deb
 ```
 
 **Exit Codes:**
@@ -140,7 +140,7 @@ The CLI provides clear error messages:
 Future versions may support `--json` flag for machine-readable output:
 
 ```bash
-distropack-cli build --package-id 123 --version 1.0.0 --json
+distropack-cli build --package-id 550e8400-e29b-41d4-a716-446655440000 --version 1.0.0 --json
 ```
 
 Output would be JSON format for easier parsing in scripts.
